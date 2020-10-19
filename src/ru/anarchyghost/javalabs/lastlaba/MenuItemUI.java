@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 
 public class MenuItemUI {
     JPanel jPanel=new JPanel();
+    JLabel cost;
     JButton plus=new JButton("Plus");
     JButton minus=new JButton("Minus");
     JLabel description=new JLabel();
@@ -88,8 +89,13 @@ public class MenuItemUI {
         nameConstraints.anchor=GridBagConstraints.NORTH;
         nameConstraints.gridx=0;
         nameConstraints.gridy=0;
-
         jPanel.add(name,nameConstraints);
+
+        nameConstraints.gridy=1;
+        cost=new JLabel(String.valueOf(typeEnum.getCost()));
+        jPanel.add(cost,nameConstraints);
+
+
 
         nameConstraints.gridwidth=1;
         nameConstraints.fill=GridBagConstraints.HORIZONTAL;

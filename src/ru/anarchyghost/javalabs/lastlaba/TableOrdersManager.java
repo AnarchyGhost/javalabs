@@ -49,9 +49,26 @@ public class TableOrdersManager implements OrdersManager {
     }
 
     public void remove(Order order){
+        boolean f=true;
         for(int i=0;i<orders.length;i++){
-            if(orders[i].equals(order))orders[i]=null;
-            break;
+            if(orders[i]!=null) {
+                f = true;
+                MenuItem[] menuItems = order.getItems();
+                MenuItem[] menuItems1 = orders[i].getItems();
+                if(menuItems.length!=menuItems1.length) {
+                    f=false;
+                    break;
+                }
+                for(int j=0;j<menuItems.length;j++){
+                    if (!(menuItems[j].getName().equals(menuItems1[j].getName()))||order.itemsQuantity(menuItems[j])!=orders[i].itemsQuantity(menuItems1[j])){
+                        f=false;
+                        break;
+                    }
+                }
+                if(f)orders[i]=null;
+                else System.out.println("ХУЙ");
+                return;
+            }
            }
     }
 
@@ -81,6 +98,13 @@ public class TableOrdersManager implements OrdersManager {
 
     @Override
     public Order[] getOrders() {
+        Order[] orders=new Order[0];
+        for(Order order:this.orders){
+            if(order!=null) {
+                orders = Arrays.copyOf(orders, orders.length + 1);
+                orders[orders.length - 1] = order;
+            }
+        }
         return orders;
     }
 

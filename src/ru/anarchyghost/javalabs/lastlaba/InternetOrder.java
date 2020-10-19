@@ -18,7 +18,7 @@ public class InternetOrder implements Order {
 
     private boolean checkName(MenuItem menuItems[], MenuItem item){
         for(int i=0;i<menuItems.length;i++){
-            if(menuItems[i].getName().equals(item))return true;
+            if(menuItems[i].getName().equals(item.getName()))return true;
         }
         return false;
     }
@@ -108,12 +108,12 @@ public class InternetOrder implements Order {
     public int itemsQuantity(MenuItem itemName) {
         int quantity=0;
         ListNode cur=head;
-        if(cur.getValue().getName().equals(itemName))quantity++;
+        if(cur.getValue().getName().equals(itemName.getName()))quantity++;
         if(cur.getNext().getValue()!=null)cur=cur.getNext();
         else return quantity;
         if(head.getValue()==null)return 0;
         while(cur!=head){
-            if(cur.getValue().getName().equals(itemName))quantity++;
+            if(cur.getValue().getName().equals(itemName.getName()))quantity++;
             cur=cur.getNext();
         }
         return quantity;

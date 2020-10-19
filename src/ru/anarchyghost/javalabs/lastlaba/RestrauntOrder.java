@@ -16,7 +16,7 @@ public class RestrauntOrder implements Order {
 
     private boolean checkName(MenuItem menuItems[], MenuItem item){
         for(int i=0;i<menuItems.length;i++){
-            if(menuItems[i].getName().equals(item))return true;
+            if(menuItems[i].getName().equals(item.getName()))return true;
         }
         return false;
     }

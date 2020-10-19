@@ -6,4 +6,5 @@ public interface OrdersManager {
     Order[] getOrders();
     int ordersCostSummary();
     int ordersQuantity();
+    void remove(Order order);
 }

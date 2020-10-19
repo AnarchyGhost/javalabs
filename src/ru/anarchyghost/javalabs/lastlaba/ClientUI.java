@@ -2,9 +2,8 @@ package ru.anarchyghost.javalabs.lastlaba;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class ClientUI extends JFrame {
     TableOrdersManager tableOrdersManager;
@@ -20,16 +19,39 @@ public class ClientUI extends JFrame {
     JLabel costs=new JLabel("");
     MenuItemUI[] menuItemUIS=new MenuItemUI[18];
     Order current=new RestrauntOrder();
+    JButton[] tableButtons=new JButton[20];
+
+    private void toChooseTable(){
+        this.getContentPane().removeAll();
+        setLayout(new GridLayout(7,3));
+        int[] freeTables=tableOrdersManager.freeTableNumbers();
+        for (int i=0;i<20;i++){
+            tableButtons[i]=new JButton(String.valueOf(i+1));
+            tableButtons[i].setEnabled(false);
+            int finalI = i;
+            tableButtons[i].addActionListener(e -> {
+                current.setCustomer(null);
+                tableOrdersManager.addOrder(current, finalI);
+                setVisible(false);
+                toDoOrder();
+            });
+            add(tableButtons[i]);
+        }
+        for(int i:freeTables){
+            tableButtons[i].setEnabled(true);
+        }
+        setVisible(true);
+
+    }
 
     private void toDoOrder(){
-        JPanel menuItemsPanel=new JPanel();
-        JPanel buttonsPanel=new JPanel();
+        menuItemsPanel=new JPanel();
+        buttonsPanel=new JPanel();
         current=new RestrauntOrder();
         this.getContentPane().removeAll();
         setLayout(new GridBagLayout());
         jMode.add(waiterMode);
         jMenuBar.add(jMode);
-
         GridBagConstraints jMenuBarConstraints= new GridBagConstraints();
         jMenuBarConstraints.gridwidth=2;
         jMenuBarConstraints.fill=GridBagConstraints.HORIZONTAL;
@@ -45,13 +67,6 @@ public class ClientUI extends JFrame {
         buttonsPanel.add(internet);
         buttonsPanel.add(table);
         buttonsPanel.add(costs);
-        waiterMode.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                new WaiterUI();
-            }
-        });
 
         GridBagConstraints textFieldsConstraint= new GridBagConstraints();
         textFieldsConstraint.fill=GridBagConstraints.BOTH;
@@ -62,24 +77,22 @@ public class ClientUI extends JFrame {
         textFieldsConstraint.gridy=1;
         JScrollPane menuPane=new JScrollPane(menuItemsPanel);
         add(menuPane,textFieldsConstraint);
-
-        menuItemsPanel.setLayout(new BoxLayout(menuItemsPanel,BoxLayout.Y_AXIS));
-        buttonsPanel.add(internet);
-        buttonsPanel.add(table);
         textFieldsConstraint.gridx=1;
         add(buttonsPanel,textFieldsConstraint);
+
+        menuItemsPanel.setLayout(new BoxLayout(menuItemsPanel,BoxLayout.Y_AXIS));
         DrinkTypeEnum[] typeEnums=DrinkTypeEnum.values();
         int i=0;
         for(DrinkTypeEnum s: typeEnums) {
             menuItemUIS[i]=new MenuItemUI(s, menuItemsPanel,this);
             i++;
         }
+
         costs.setText(String.valueOf(current.costTotal()));
-        internet.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                toDoClient();
-            }
+        internet.addActionListener(e -> toDoClient());
+        table.addActionListener(e -> {
+//                setVisible(false);
+            toChooseTable();
         });
         setVisible(true);
     }
@@ -130,24 +143,18 @@ public class ClientUI extends JFrame {
         add(cancelButton);
         setVisible(false);
         setVisible(true);
-        okButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                InternetOrder internetOrder=new InternetOrder(current);
-                internetOrder.setCustomer(new Customer(firstNameField.getText(),secondNameField.getText(), Integer.valueOf(ageField.getText()),new Adress(
-                        cityField.getText(), Integer.valueOf(zipField.getText()),streetField.getText(), Integer.valueOf(buildingField.getText()),letterField.getText().toCharArray()[0], Integer.valueOf(appartamentField.getText())
-                )));
-                internetOrdersManager.add(internetOrder);
-                setVisible(false);
-                toDoOrder();
-            }
+        okButton.addActionListener(e -> {
+            InternetOrder internetOrder=new InternetOrder(current);
+            internetOrder.setCustomer(new Customer(firstNameField.getText(),secondNameField.getText(), Integer.parseInt(ageField.getText()),new Adress(
+                    cityField.getText(), Integer.parseInt(zipField.getText()),streetField.getText(), Integer.parseInt(buildingField.getText()),letterField.getText().toCharArray()[0], Integer.parseInt(appartamentField.getText())
+            )));
+            internetOrdersManager.add(internetOrder);
+            setVisible(false);
+            toDoOrder();
         });
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                toDoOrder();
-            }
+        cancelButton.addActionListener(e -> {
+            setVisible(false);
+            toDoOrder();
         });
 
     }
@@ -156,17 +163,41 @@ public class ClientUI extends JFrame {
         this();
         this.tableOrdersManager=tableOrdersManager;
         this.internetOrdersManager=internetOrdersManager;
+        waiterMode.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                setVisible(false);
+                new WaiterUI(tableOrdersManager,internetOrdersManager);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                new WaiterUI(tableOrdersManager,internetOrdersManager);
+                setVisible(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        toDoOrder();
     }
 
     ClientUI() {
         super("Client");
         setSize(1280, 720);
         setLocation((1920 - 1280) / 2, (1080 - 720) / 2);
-
-        toDoOrder();
-
-        setVisible(true);
-
     }
 
 
