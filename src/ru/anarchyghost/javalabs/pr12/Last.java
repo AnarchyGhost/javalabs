@@ -10,7 +10,6 @@ public class Last {
         for (String retval : string.split("\\s")) {
             list.add(retval);
         }
-
         newList=function();
     }
 

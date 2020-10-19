@@ -21,6 +21,7 @@ public class TextDocument implements IDocument {
     public void open(JFrame frame) throws IOException {
         int c;
         FileReader fileReader=new FileReader(file);
+
         GridBagConstraints textFieldsConstraint= new GridBagConstraints();
         textFieldsConstraint.fill=GridBagConstraints.BOTH;
         textFieldsConstraint.weightx=1.0f;
@@ -28,7 +29,7 @@ public class TextDocument implements IDocument {
         textFieldsConstraint.anchor=GridBagConstraints.SOUTHWEST;
         textFieldsConstraint.gridx=0;
         textFieldsConstraint.gridy=1;
-
+        
         JTextArea textArea=new JTextArea("");
         while((c= fileReader.read())!=-1){
             textArea.setText(textArea.getText()+(char)c);

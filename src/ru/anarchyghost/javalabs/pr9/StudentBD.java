@@ -25,11 +25,11 @@ public class StudentBD {
         if(Integer.valueOf(id)==null) {
             throw new NumberFormatException();
         }
-        if(Double.valueOf(gpa)==null||Double.valueOf(gpa)<0||Double.valueOf(gpa)>5) {
+        if(Double.isNaN(Double.parseDouble(gpa))||Double.parseDouble(gpa)<0||Double.parseDouble(gpa)>5) {
             throw new NumberFormatException();
         }
 
-        return new Student(name,Integer.valueOf(id),Integer.valueOf(gpa));
+        return new Student(name,Integer.valueOf(id),Double.valueOf(gpa));
     }
 
     public void add(Student student){

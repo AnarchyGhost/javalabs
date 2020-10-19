@@ -27,6 +27,7 @@ public class Redactor extends JFrame {
         jMenu.add(saveItem);
         jMenu.add(exitItem);
         jMenuBar.add(jMenu);
+
         GridBagConstraints textFieldsConstraint= new GridBagConstraints();
         textFieldsConstraint.fill=GridBagConstraints.HORIZONTAL;
         textFieldsConstraint.weightx=1.0f;
@@ -94,17 +95,18 @@ public class Redactor extends JFrame {
                         case ("Текстовый"):
                             createDocument = new TextCreateDocument();
                     }
-                }
-                if(createDocument!=null){
-                    String name = JOptionPane.showInputDialog(
-                            null,
-                            "<html><h2>Введите название файла");
-                    if(name!=null) {
-                        document = createDocument.CreateOpen(name);
-                        try {
-                            document.open(Redactor.this);
-                        } catch (IOException ioException) {
-                            JOptionPane.showMessageDialog(null, "File doesn't exist");
+                    if (createDocument != null) {
+                        String name = JOptionPane.showInputDialog(
+                                null,
+                                "<html><h2>Введите название файла");
+                        if (name != null) {
+                            document = createDocument.CreateOpen(name);
+                            try {
+                                document.open(Redactor.this);
+                            } catch (IOException ioException) {
+                                document = null;
+                                JOptionPane.showMessageDialog(null, "File doesn't exist");
+                            }
                         }
                     }
                 }

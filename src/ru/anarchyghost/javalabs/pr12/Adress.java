@@ -21,8 +21,7 @@ public class Adress {
 
         public void setAdress(String adress) {
             Pattern pattern =
-                    Pattern.compile("\\w+", Pattern.UNICODE_CHARACTER_CLASS
-                            | Pattern.CASE_INSENSITIVE);
+                    Pattern.compile("\\w+");
             Matcher matcher = pattern.matcher(adress);
             ArrayList<String> words=new ArrayList<>();
 
