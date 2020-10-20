@@ -91,6 +91,13 @@ public class ClientUI extends JFrame {
         for(int i:freeTables){
             tableButtons[i].setEnabled(true);
         }
+        JButton cancelButton=new JButton("Отмена");
+        add(cancelButton);
+        cancelButton.addActionListener(e->{
+            setVisible(false);
+            current=new RestrauntOrder();
+            toDoOrder();
+        });
         setVisible(true);
 
     }
