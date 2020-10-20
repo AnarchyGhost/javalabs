@@ -10,10 +10,10 @@ public class ClientUI extends JFrame {
     InternetOrdersManager internetOrdersManager;
     OrdersManager currentOrdersManager;
     JMenuBar jMenuBar=new JMenuBar();
-    JMenu jMode=new JMenu("Mode");
-    JMenuItem waiterMode=new JMenuItem("Waiter");
-    JButton internet=new JButton("Internet Order");
-    JButton table=new JButton("Table Order");
+    JMenu jMode=new JMenu("Режим");
+    JMenuItem waiterMode=new JMenuItem("Режим официанта");
+    JButton internet=new JButton("Доставка");
+    JButton table=new JButton("В ресторане");
     JPanel menuItemsPanel=new JPanel();
     JPanel buttonsPanel=new JPanel();
     JLabel costs=new JLabel("");
@@ -21,20 +21,71 @@ public class ClientUI extends JFrame {
     Order current=new RestrauntOrder();
     JButton[] tableButtons=new JButton[20];
 
-    private void toChooseTable(){
+    private void addClickers(){
+
+
+        if(table.getActionListeners().length==0)table.addActionListener(e -> {
+            try {
+                toChooseTable();
+            } catch (BusyTablesException | EmptyOrderException busyTablesException) {
+            }
+        });
+
+        if(waiterMode.getActionListeners().length==0)waiterMode.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                setVisible(false);
+                new WaiterUI(tableOrdersManager,internetOrdersManager);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                new WaiterUI(tableOrdersManager,internetOrdersManager);
+                setVisible(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        if(internet.getActionListeners().length==0)internet.addActionListener(e -> {
+            try {
+                toDoClient();
+            } catch (EmptyOrderException emptyOrderException) {
+            }
+        });
+    }
+
+    private void toChooseTable() throws BusyTablesException, EmptyOrderException {
+        int[] freeTables=tableOrdersManager.freeTableNumbers();
+        if(current.getItems().length==0) throw new EmptyOrderException();
+        if(freeTables.length==0) throw new BusyTablesException();
         this.getContentPane().removeAll();
         setLayout(new GridLayout(7,3));
-        int[] freeTables=tableOrdersManager.freeTableNumbers();
-        for (int i=0;i<20;i++){
-            tableButtons[i]=new JButton(String.valueOf(i+1));
-            tableButtons[i].setEnabled(false);
+        for(int i=0;i<20;i++){
             int finalI = i;
-            tableButtons[i].addActionListener(e -> {
+            tableButtons[i]=new JButton(String.valueOf(i+1));
+            if(tableButtons[i].getActionListeners().length==0)tableButtons[i].addActionListener(e -> {
                 current.setCustomer(null);
                 tableOrdersManager.addOrder(current, finalI);
                 setVisible(false);
                 toDoOrder();
             });
+        }
+        for (int i=0;i<20;i++){
+            tableButtons[i].setEnabled(false);
             add(tableButtons[i]);
         }
         for(int i:freeTables){
@@ -52,6 +103,7 @@ public class ClientUI extends JFrame {
         setLayout(new GridBagLayout());
         jMode.add(waiterMode);
         jMenuBar.add(jMode);
+
         GridBagConstraints jMenuBarConstraints= new GridBagConstraints();
         jMenuBarConstraints.gridwidth=2;
         jMenuBarConstraints.fill=GridBagConstraints.HORIZONTAL;
@@ -63,10 +115,11 @@ public class ClientUI extends JFrame {
 
         add(jMenuBar,jMenuBarConstraints);
 
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel,BoxLayout.Y_AXIS));
+        buttonsPanel.setLayout(new GridLayout(3,1));
+        buttonsPanel.add(costs);
         buttonsPanel.add(internet);
         buttonsPanel.add(table);
-        buttonsPanel.add(costs);
+
 
         GridBagConstraints textFieldsConstraint= new GridBagConstraints();
         textFieldsConstraint.fill=GridBagConstraints.BOTH;
@@ -88,17 +141,15 @@ public class ClientUI extends JFrame {
             i++;
         }
 
-        costs.setText(String.valueOf(current.costTotal()));
-        internet.addActionListener(e -> toDoClient());
-        table.addActionListener(e -> {
-//                setVisible(false);
-            toChooseTable();
-        });
+        costs.setText("Стоимость заказа: "+String.valueOf(current.costTotal()));
+
+
         setVisible(true);
     }
 
-    private void toDoClient(){
+    private void toDoClient() throws EmptyOrderException {
         System.out.println();
+        if(current.getItems().length==0) throw new EmptyOrderException();
         this.getContentPane().removeAll();
         JLabel cityLabel=new JLabel("Город:");
         JLabel zipCode=new JLabel("Индекс");
@@ -139,18 +190,22 @@ public class ClientUI extends JFrame {
         add(secondNameField);
         add(ageLabel);
         add(ageField);
-        add(okButton);
         add(cancelButton);
+        add(okButton);
         setVisible(false);
         setVisible(true);
         okButton.addActionListener(e -> {
             InternetOrder internetOrder=new InternetOrder(current);
-            internetOrder.setCustomer(new Customer(firstNameField.getText(),secondNameField.getText(), Integer.parseInt(ageField.getText()),new Adress(
-                    cityField.getText(), Integer.parseInt(zipField.getText()),streetField.getText(), Integer.parseInt(buildingField.getText()),letterField.getText().toCharArray()[0], Integer.parseInt(appartamentField.getText())
-            )));
-            internetOrdersManager.add(internetOrder);
-            setVisible(false);
-            toDoOrder();
+            try {
+                internetOrder.setCustomer(new Customer(firstNameField.getText(), secondNameField.getText(), Integer.parseInt(ageField.getText()), new Adress(
+                        cityField.getText(), Integer.parseInt(zipField.getText()), streetField.getText(), Integer.parseInt(buildingField.getText()), letterField.getText().toCharArray()[0], Integer.parseInt(appartamentField.getText())
+                )));
+                internetOrdersManager.add(internetOrder);
+                setVisible(false);
+                toDoOrder();
+            }catch (Exception exception) {
+                JOptionPane.showMessageDialog(null,"Вы некорректно заполнили поля. Повторите ввод.","Bad input",JOptionPane.ERROR_MESSAGE);
+            }
         });
         cancelButton.addActionListener(e -> {
             setVisible(false);
@@ -163,34 +218,7 @@ public class ClientUI extends JFrame {
         this();
         this.tableOrdersManager=tableOrdersManager;
         this.internetOrdersManager=internetOrdersManager;
-        waiterMode.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                setVisible(false);
-                new WaiterUI(tableOrdersManager,internetOrdersManager);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                new WaiterUI(tableOrdersManager,internetOrdersManager);
-                setVisible(false);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
+        addClickers();
         toDoOrder();
     }
 

@@ -1,7 +1,5 @@
 package ru.anarchyghost.javalabs.lastlaba;
 
-import ru.anarchyghost.javalabs.pr11.Queue;
-
 public class InternetOrdersManager implements OrdersManager {
     QueueNode head;
     QueueNode tail;
@@ -40,8 +38,8 @@ public class InternetOrdersManager implements OrdersManager {
     public int itemsQuantity(String itemName) {
         int cost=0;
         Order[] orders=getOrders();
-        for(int i=0;i<orders.length;i++){
-            cost+=orders[i].itemsQuantity(itemName);
+        for (Order order : orders) {
+            cost += order.itemsQuantity(itemName);
         }
         return cost;
     }
@@ -50,8 +48,8 @@ public class InternetOrdersManager implements OrdersManager {
     public int itemsQuantity(MenuItem itemName) {
         int cost=0;
         Order[] orders=getOrders();
-        for(int i=0;i<orders.length;i++){
-            cost+=orders[i].itemsQuantity(itemName);
+        for (Order order : orders) {
+            cost += order.itemsQuantity(itemName);
         }
         return cost;
     }
@@ -72,8 +70,8 @@ public class InternetOrdersManager implements OrdersManager {
     public int ordersCostSummary() {
         int cost=0;
         Order[] orders=getOrders();
-        for(int i=0;i<orders.length;i++){
-            cost+=orders[i].costTotal();
+        for (Order order : orders) {
+            cost += order.costTotal();
         }
         return cost;
     }
@@ -87,13 +85,12 @@ public class InternetOrdersManager implements OrdersManager {
     public void remove(Order order) {
         QueueNode node=head;
         do{
-        boolean f=true;
+        boolean f;
                 f = true;
                 MenuItem[] menuItems = order.getItems();
                 MenuItem[] menuItems1 = node.getValue().getItems();
                 if(menuItems.length!=menuItems1.length) {
                     f=false;
-                    break;
                 }
                 for(int j=0;j<menuItems.length;j++){
                     if (!(menuItems[j].getName().equals(menuItems1[j].getName()))||order.itemsQuantity(menuItems[j])!=node.getValue().itemsQuantity(menuItems1[j])){
@@ -107,12 +104,7 @@ public class InternetOrdersManager implements OrdersManager {
                     if(node==head) head=node.getNext();
                     if(node==tail) tail=node.getPrev();
                 }
-                else System.out.println("ХУЙ");
                 return;
         }while (node!=tail);
-        if(order.equals(node.getValue())){
-
-            return;
-        }
     }
 }

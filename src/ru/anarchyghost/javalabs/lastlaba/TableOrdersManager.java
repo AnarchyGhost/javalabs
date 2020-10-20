@@ -6,9 +6,7 @@ public class TableOrdersManager implements OrdersManager {
     Order[] orders=new Order[20];
 
     TableOrdersManager(){
-        for (int i=0;i<orders.length;i++) {
-            orders[i]=null;
-        }
+        Arrays.fill(orders, null);
     }
 
     public boolean addOrder(Order order,int table){
@@ -66,7 +64,6 @@ public class TableOrdersManager implements OrdersManager {
                     }
                 }
                 if(f)orders[i]=null;
-                else System.out.println("ХУЙ");
                 return;
             }
            }
@@ -81,8 +78,8 @@ public class TableOrdersManager implements OrdersManager {
     @Override
     public int itemsQuantity(String itemName) {
         int cost=0;
-        for(int i=0;i<orders.length;i++){
-            if(orders[i]!=null)cost+=orders[i].itemsQuantity(itemName);
+        for (Order order : orders) {
+            if (order != null) cost += order.itemsQuantity(itemName);
         }
         return cost;
     }
@@ -90,8 +87,8 @@ public class TableOrdersManager implements OrdersManager {
     @Override
     public int itemsQuantity(MenuItem itemName) {
         int cost=0;
-        for(int i=0;i<orders.length;i++){
-            if(orders[i]!=null)cost+=orders[i].itemsQuantity(itemName);
+        for (Order order : orders) {
+            if (order != null) cost += order.itemsQuantity(itemName);
         }
         return cost;
     }
@@ -111,8 +108,8 @@ public class TableOrdersManager implements OrdersManager {
     @Override
     public int ordersCostSummary() {
         int cost=0;
-        for(int i=0;i<orders.length;i++){
-            if(orders[i]!=null)cost+=orders[i].costTotal();
+        for (Order order : orders) {
+            if (order != null) cost += order.costTotal();
         }
         return cost;
     }
@@ -120,8 +117,8 @@ public class TableOrdersManager implements OrdersManager {
     @Override
     public int ordersQuantity() {
         int quantity=0;
-        for(int i=0;i<orders.length;i++){
-            if(orders[i]!=null)quantity++;
+        for (Order order : orders) {
+            if (order != null) quantity++;
         }
         return quantity;
     }

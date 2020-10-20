@@ -1,6 +1,5 @@
 package ru.anarchyghost.javalabs.lastlaba;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class InternetOrder implements Order {
@@ -9,16 +8,16 @@ public class InternetOrder implements Order {
     private ListNode tail;
     Customer customer;
 
-    private boolean checkName(String menuItems[], String item){
-        for(int i=0;i<menuItems.length;i++){
-            if(menuItems[i].equals(item))return true;
+    private boolean checkName(String[] menuItems, String item){
+        for (String menuItem : menuItems) {
+            if (menuItem.equals(item)) return true;
         }
         return false;
     }
 
-    private boolean checkName(MenuItem menuItems[], MenuItem item){
-        for(int i=0;i<menuItems.length;i++){
-            if(menuItems[i].getName().equals(item.getName()))return true;
+    private boolean checkName(MenuItem[] menuItems, MenuItem item){
+        for (MenuItem menuItem : menuItems) {
+            if (menuItem.getName().equals(item.getName())) return true;
         }
         return false;
     }
@@ -145,7 +144,7 @@ public class InternetOrder implements Order {
     public boolean remove(String itemName) {
         if(itemsQuantity(itemName)==0)return false;
         ListNode cur=head;
-        while(cur.getValue().getName()!=itemName) cur=cur.getNext();
+        while(!cur.getValue().getName().equals(itemName)) cur=cur.getNext();
         if(size>2) {
             cur.prev.setNext(cur.getNext());
             cur.next.setPrev(cur.getPrev());
@@ -208,7 +207,7 @@ public class InternetOrder implements Order {
         int count=0;
         while(itemsQuantity(itemName)!=0) {
             ListNode cur = head;
-            while (cur.getValue().getName() != itemName) cur = cur.getNext();
+            while (!cur.getValue().getName().equals(itemName)) cur = cur.getNext();
             if (size > 2) {
                 cur.prev.setNext(cur.getNext());
                 cur.next.setPrev(cur.getPrev());
@@ -291,8 +290,8 @@ public class InternetOrder implements Order {
     public int costTotal() {
         MenuItem[] menuItems=getItems();
         int cost=0;
-        for(int i=0;i<menuItems.length;i++){
-            cost+=menuItems[i].getCost()*itemsQuantity(menuItems[i]);
+        for (MenuItem menuItem : menuItems) {
+            cost += menuItem.getCost() * itemsQuantity(menuItem);
         }
         return cost;
     }

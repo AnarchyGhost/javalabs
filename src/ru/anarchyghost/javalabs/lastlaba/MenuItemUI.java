@@ -8,11 +8,11 @@ import java.awt.event.MouseListener;
 public class MenuItemUI {
     JPanel jPanel=new JPanel();
     JLabel cost;
-    JButton plus=new JButton("Plus");
-    JButton minus=new JButton("Minus");
+    JButton plus=new JButton("+");
+    JButton minus=new JButton("-");
     JLabel description=new JLabel();
     int count=0;
-    JLabel countField=new JLabel(String.valueOf(count));
+    JLabel countField=new JLabel("Количество: "+String.valueOf(count));
     JLabel name=new JLabel("product");
 
     MenuItemUI(DrinkTypeEnum typeEnum, JPanel panel, ClientUI clientUI){
@@ -22,10 +22,9 @@ public class MenuItemUI {
             @Override
             public void mouseClicked(MouseEvent e) {
                 count++;
-                countField.setText(String.valueOf(count));
+                countField.setText("Количество: "+String.valueOf(count));
                 clientUI.current.add(new Drink(typeEnum));
-                clientUI.costs.setText(String.valueOf(clientUI.current.costTotal()));
-                System.out.println(clientUI.current.costTotal());
+                clientUI.costs.setText("Стоимость: "+String.valueOf(clientUI.current.costTotal()));
             }
 
             @Override
@@ -53,10 +52,9 @@ public class MenuItemUI {
             public void mouseClicked(MouseEvent e) {
                 if( count>0){
                     count--;
-                    countField.setText(String.valueOf(count));
+                    countField.setText("Количество: "+String.valueOf(count));
                     clientUI.current.remove(new Drink(typeEnum));
-                    clientUI.costs.setText(String.valueOf(clientUI.current.costTotal()));
-                    System.out.println(clientUI.current.itemsQuantity());
+                    clientUI.costs.setText("Стоимость: "+String.valueOf(clientUI.current.costTotal()));
                 }
             }
 
@@ -92,7 +90,7 @@ public class MenuItemUI {
         jPanel.add(name,nameConstraints);
 
         nameConstraints.gridy=1;
-        cost=new JLabel(String.valueOf(typeEnum.getCost()));
+        cost=new JLabel("Стоимость: "+String.valueOf(typeEnum.getCost()));
         jPanel.add(cost,nameConstraints);
 
 

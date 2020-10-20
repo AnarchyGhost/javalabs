@@ -2,14 +2,12 @@ package ru.anarchyghost.javalabs.lastlaba;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class RestrauntUI extends JFrame {
     JMenuBar jMenuBar=new JMenuBar();
-    JMenu jMode=new JMenu("Mode");
-    JMenuItem clientMode=new JMenuItem("Client");
-    JMenuItem waiterMode=new JMenuItem("Waiter");
+    JMenu jMode=new JMenu("Режим");
+    JMenuItem clientMode=new JMenuItem("Режим клиента");
+    JMenuItem waiterMode=new JMenuItem("Режим официанта");
     RestrauntUI() {
         setSize(1280, 720);
         setLocation((1920 - 1280) / 2, (1080 - 720) / 2);
@@ -26,19 +24,13 @@ public class RestrauntUI extends JFrame {
         jMenuBarConstraints.gridy=0;
         add(jMenuBar,jMenuBarConstraints);
         setVisible(true);
-        clientMode.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                new ClientUI(new TableOrdersManager(),new InternetOrdersManager());
-            }
+        clientMode.addActionListener(e -> {
+            setVisible(false);
+            new ClientUI(new TableOrdersManager(),new InternetOrdersManager());
         });
-        waiterMode.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                new WaiterUI(new TableOrdersManager(),new InternetOrdersManager());
-            }
+        waiterMode.addActionListener(e -> {
+            setVisible(false);
+            new WaiterUI(new TableOrdersManager(),new InternetOrdersManager());
         });
     }
 

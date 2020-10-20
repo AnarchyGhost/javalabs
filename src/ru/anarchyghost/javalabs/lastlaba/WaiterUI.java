@@ -7,11 +7,12 @@ public class WaiterUI extends JFrame {
     InternetOrdersManager internetOrdersManager;
     TableOrdersManager tableOrdersManager;
     JMenuBar jMenuBar=new JMenuBar();
-    JMenu jMode=new JMenu("Mode");
-    JMenuItem waiterMode=new JMenuItem("Client");
+    JMenu jMode=new JMenu("Режим");
+    JMenuItem waiterMode=new JMenuItem("Режим клиента");
     JPanel menuItemsPanel=new JPanel();
     JPanel buttonsPanel=new JPanel();
     JLabel costs=new JLabel("");
+    JLabel countLabel=new JLabel("");
     WaiterUI(){
         super("Waiter");
         setSize(1280, 720);
@@ -45,9 +46,11 @@ public class WaiterUI extends JFrame {
 
         add(jMenuBar,jMenuBarConstraints);
 
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel,BoxLayout.Y_AXIS));
+        buttonsPanel.setLayout(new GridLayout(2,1));
         buttonsPanel.add(costs);
-        costs.setText(String.valueOf(this.tableOrdersManager.ordersCostSummary()+this.internetOrdersManager.ordersCostSummary()));
+        buttonsPanel.add(countLabel);
+        costs.setText("Стоимость заказов, ожидающих выдачи: "+String.valueOf(this.tableOrdersManager.ordersCostSummary()+this.internetOrdersManager.ordersCostSummary()));
+        countLabel.setText("Количество заказов, ожидаюших выдачи: "+String.valueOf(this.tableOrdersManager.getOrders().length+this.internetOrdersManager.getOrders().length));
         waiterMode.addActionListener(e -> {
             setVisible(false);
             new ClientUI(this.tableOrdersManager,this.internetOrdersManager);
